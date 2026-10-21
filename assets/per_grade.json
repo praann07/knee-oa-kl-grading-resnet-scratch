@@ -1,0 +1,45 @@
+{
+ "per_grade": [
+  {
+   "grade": "G0",
+   "name": "Healthy",
+   "support": 1571,
+   "precision": 0.716,
+   "recall": 0.836,
+   "f1": 0.772
+  },
+  {
+   "grade": "G1",
+   "name": "Doubtful",
+   "support": 724,
+   "precision": 0.318,
+   "recall": 0.296,
+   "f1": 0.306
+  },
+  {
+   "grade": "G2",
+   "name": "Minimal",
+   "support": 1062,
+   "precision": 0.691,
+   "recall": 0.52,
+   "f1": 0.593
+  },
+  {
+   "grade": "G3",
+   "name": "Moderate",
+   "support": 529,
+   "precision": 0.769,
+   "recall": 0.86,
+   "f1": 0.812
+  },
+  {
+   "grade": "G4",
+   "name": "Severe",
+   "support": 122,
+   "precision": 0.89,
+   "recall": 0.795,
+   "f1": 0.84
+  }
+ ],
+ "within_one_grade": 0.9376
+}
