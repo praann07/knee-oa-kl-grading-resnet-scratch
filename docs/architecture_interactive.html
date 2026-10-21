@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Knee OA grading architecture</title>
+<style>
+  html, body { margin: 0; background: #ffffff; }
+  svg { display: block; width: 100%; max-width: 1440px; height: auto; margin: 0 auto; }
+  svg text { font-family: Arial, Helvetica, sans-serif; fill: #222; }
+  .in  { font-weight: 700; text-anchor: middle; }
+  .ttl { font-size: 24px; font-weight: 700; }
+  .gl  { font-size: 19px; font-weight: 700; fill: #444; }
+  .gs  { font-weight: 400; }
+  .gn  { font-size: 14px; fill: #666; }
+  .tn  { font-size: 17px; font-weight: 700; }
+  .td  { font-size: 14px; fill: #555; }
+  .pt  { font-size: 23px; }
+  .pr  { font-weight: 400; }
+  .tt  { font-size: 20px; font-weight: 700; text-anchor: middle; }
+  .dm  { font-size: 16px; text-anchor: middle; fill: #555; }
+  .io  { font-size: 22px; font-weight: 700; text-anchor: middle; }
+  .al  { font-size: 19px; fill: #333; }
+  .dl  { font-size: 18px; fill: #444; text-anchor: middle; paint-order: stroke; stroke: #fff; stroke-width: 6px; }
+  .note { font-size: 15px; fill: #666; }
+  .rl  { font-size: 19px; font-weight: 700; }
+  .opt { font-weight: 700; text-anchor: middle; fill: #222; }
+  .lg  { font-size: 19px; fill: #222; }
+  .cn  { font-size: 18px; font-weight: 700; }
+  .cs  { font-size: 15px; fill: #555; }
+  .cm  { font-size: 16px; font-weight: 700; }
+  .cb  { font-size: 11.5px; font-weight: 700; fill: #3f6db3; letter-spacing: .3px; }
+  .ln   { fill: none; stroke: #444; stroke-width: 2.4; marker-end: url(#ar); }
+  .dash { fill: none; stroke: #777; stroke-width: 2; stroke-dasharray: 8 6; marker-end: url(#ar); }
+  .cube polygon, .cube rect { stroke: rgba(0,0,0,.35); stroke-width: 1; }
+  .op  { fill: #e8eaed; stroke: #555; stroke-width: 1.6; }
+  .pl  { fill: #fff; stroke: #444; stroke-width: 2; }
+  .plp { fill: none; stroke: #444; stroke-width: 2; }
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1440 590" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#444"/>
+    </marker>
+  </defs>
+  <text class="ttl" x="30" y="30" >Knee OA KL-grade classifier &#8211; from-scratch ResNet ensemble</text>
+  <text class="io" x="50" y="341" >Knee</text>
+  <text class="io" x="50" y="365" >X-ray</text>
+  <path class="ln" d="M88 345 H108"/>
+  <g class="cube">
+  <polygon fill="#e1e6ed" points="110,297 120,287 210,287 200,297"/>
+  <polygon fill="#97a3b4" points="200,297 210,287 210,383 200,393"/>
+  <rect fill="#c3ccd8" x="110" y="297" width="90" height="96"/>
+  <text class="in" x="155.0" y="341.3" style="font-size:18px;fill:#222">224&#215;224</text>
+  <text class="in" x="155.0" y="360.2" style="font-size:16px;fill:#222">Gray</text>
+  </g>
+  <text class="tt" x="160" y="440" >Preprocess</text>
+  <text class="dm" x="160" y="462" >1 &#8594; 3 ch</text>
+  <rect x="232" y="190" width="830" height="330" rx="16" fill="#fafbfd" stroke="#9aa3b2" stroke-width="2" stroke-dasharray="3 7"/>
+  <text class="gl" x="250" y="218" >ResNet &#215; 4 seeds <tspan class='gs'>(all 4 kept, &#954;-weighted)</tspan></text>
+  <text class="gn" x="642" y="502" text-anchor="middle">fine-tuned 80 epochs &#183; focal + ordinal soft-label loss &#183; AdamW &#183; EMA 0.998</text>
+  <path class="ln" d="M210 345 H250"/>
+  <g class="cube">
+  <polygon fill="#93b8ee" points="252,290 262,280 328,280 318,290"/>
+  <polygon fill="#3f6db3" points="318,290 328,280 328,390 318,400"/>
+  <rect fill="#5b8fd9" x="252" y="290" width="66" height="110"/>
+  <text class="in" x="285.0" y="341.3" style="font-size:16px;fill:#ffffff">Conv</text>
+  <text class="in" x="285.0" y="358.8" style="font-size:15px;fill:#ffffff">+ Pool</text>
+  </g>
+  <text class="tt" x="290.0" y="440" >Entry</text>
+  <text class="dm" x="290.0" y="462" >112&#215;112&#215;64</text>
+  <g class="cube">
+  <polygon fill="#93b8ee" points="382,290 392,280 458,280 448,290"/>
+  <polygon fill="#3f6db3" points="448,290 458,280 458,390 448,400"/>
+  <rect fill="#5b8fd9" x="382" y="290" width="66" height="110"/>
+  <text class="in" x="415.0" y="343.7" style="font-size:22px;fill:#ffffff">2&#215;</text>
+  <text class="in" x="415.0" y="361.9" style="font-size:14px;fill:#ffffff">ResBlock</text>
+  </g>
+  <text class="tt" x="420.0" y="440" >Stage 1</text>
+  <text class="dm" x="420.0" y="462" >112&#215;112&#215;64</text>
+  <path class="ln" d="M328 345 H380"/>
+  <g class="cube">
+  <polygon fill="#93b8ee" points="512,301 528,285 594,285 578,301"/>
+  <polygon fill="#3f6db3" points="578,301 594,285 594,373 578,389"/>
+  <rect fill="#5b8fd9" x="512" y="301" width="66" height="88"/>
+  <text class="in" x="545.0" y="343.7" style="font-size:22px;fill:#ffffff">2&#215;</text>
+  <text class="in" x="545.0" y="361.9" style="font-size:14px;fill:#ffffff">ResBlock</text>
+  </g>
+  <text class="tt" x="553.0" y="440" >Stage 2</text>
+  <text class="dm" x="553.0" y="462" >56&#215;56&#215;128</text>
+  <path class="ln" d="M458 345 H510"/>
+  <path d="M473.0 315 V326" stroke="#333" stroke-width="2.4" fill="none"/>
+  <polygon fill="#333" points="468.5,325 477.5,325 473.0,333"/>
+  <text class="al" x="483.0" y="332">&#215;2</text>
+  <g class="cube">
+  <polygon fill="#93b8ee" points="642,310 664,288 730,288 708,310"/>
+  <polygon fill="#3f6db3" points="708,310 730,288 730,358 708,380"/>
+  <rect fill="#5b8fd9" x="642" y="310" width="66" height="70"/>
+  <text class="in" x="675.0" y="343.7" style="font-size:22px;fill:#ffffff">2&#215;</text>
+  <text class="in" x="675.0" y="361.9" style="font-size:14px;fill:#ffffff">ResBlock</text>
+  </g>
+  <text class="tt" x="686.0" y="440" >Stage 3</text>
+  <text class="dm" x="686.0" y="462" >28&#215;28&#215;256</text>
+  <path class="ln" d="M594 345 H640"/>
+  <path d="M606.0 315 V326" stroke="#333" stroke-width="2.4" fill="none"/>
+  <polygon fill="#333" points="601.5,325 610.5,325 606.0,333"/>
+  <text class="al" x="616.0" y="332">&#215;2</text>
+  <g class="cube">
+  <polygon fill="#93b8ee" points="772,317 794,295 860,295 838,317"/>
+  <polygon fill="#3f6db3" points="838,317 860,295 860,351 838,373"/>
+  <rect fill="#5b8fd9" x="772" y="317" width="66" height="56"/>
+  <text class="in" x="805.0" y="343.7" style="font-size:22px;fill:#ffffff">1&#215;</text>
+  <text class="in" x="805.0" y="361.9" style="font-size:14px;fill:#ffffff">ResBlock</text>
+  </g>
+  <text class="tt" x="816.0" y="440" >Stage 4</text>
+  <text class="dm" x="816.0" y="462" >14&#215;14&#215;256</text>
+  <path class="ln" d="M730 345 H770"/>
+  <path d="M739.0 315 V326" stroke="#333" stroke-width="2.4" fill="none"/>
+  <polygon fill="#333" points="734.5,325 743.5,325 739.0,333"/>
+  <text class="al" x="749.0" y="332">&#215;2</text>
+  <rect class="op" x="888" y="323" width="54" height="44" rx="7"/>
+  <text class="opt" x="915.0" y="350.6" style="font-size:16px">GAP</text>
+  <path class="ln" d="M860 345 H886"/>
+  <text class="tt" x="915" y="440" >Pool</text>
+  <text class="dm" x="915" y="462" >256-d</text>
+  <rect class="op" x="966" y="317" width="74" height="56" rx="7"/>
+  <text class="opt" x="1003.0" y="349.9" style="font-size:14px">MLP head</text>
+  <path class="ln" d="M942 345 H964"/>
+  <text class="tt" x="1003" y="440" >Head</text>
+  <text class="dm" x="1003" y="462" >256 &#8594; 5</text>
+  <path class="ln" d="M1040 345 H1072"/>
+  <g class="cube">
+  <polygon fill="#c07ff7" points="1074,301 1086,289 1162,289 1150,301"/>
+  <polygon fill="#7620c4" points="1150,301 1162,289 1162,377 1150,389"/>
+  <rect fill="#9b3df0" x="1074" y="301" width="76" height="88"/>
+  <text class="in" x="1112.0" y="341.9" style="font-size:18px;fill:#ffffff">4-seed</text>
+  <text class="in" x="1112.0" y="361.4" style="font-size:16px;fill:#ffffff">avg</text>
+  </g>
+  <text class="tt" x="1112" y="440" >Ensemble</text>
+  <text class="dm" x="1112" y="462" >&#954;-weighted</text>
+  <text class="dm" x="1112" y="481" >+ flip TTA</text>
+  <path class="ln" d="M1162 345 H1182"/>
+  <g class="cube">
+  <polygon fill="#e8707f" points="1186,301 1198,289 1274,289 1262,301"/>
+  <polygon fill="#a31f37" points="1262,301 1274,289 1274,377 1262,389"/>
+  <rect fill="#d1344f" x="1186" y="301" width="76" height="88"/>
+  <text class="in" x="1224.0" y="340.8" style="font-size:20px;fill:#ffffff">Class</text>
+  <text class="in" x="1224.0" y="362.0" style="font-size:18px;fill:#ffffff">bias</text>
+  </g>
+  <text class="tt" x="1224" y="440" >Decode</text>
+  <text class="dm" x="1224" y="462" >tuned on val</text>
+  <path class="ln" d="M1274 345 H1312"/>
+  <text class="io" x="1380" y="341" >KL grade</text>
+  <text class="io" x="1380" y="365" >G0 &#8211; G4</text>
+  <text class="dm" x="1380" y="391" style="font-size:15px">acc 65.7 %</text>
+  <text class="dm" x="1380" y="410" style="font-size:15px">&#954; = 0.813</text>
+  <g class="cube">
+  <polygon fill="#8be8d2" points="300,58 310,48 410,48 400,58"/>
+  <polygon fill="#2fa98d" points="400,58 410,48 410,104 400,114"/>
+  <rect fill="#4fd6b6" x="300" y="58" width="100" height="56"/>
+  <text class="in" x="350.0" y="82.8" style="font-size:16px;fill:#10372f">Rotation</text>
+  <text class="in" x="350.0" y="99.5" style="font-size:14px;fill:#10372f">pre-train</text>
+  </g>
+  <text class="tn" x="424" y="82" >Self-supervised init</text>
+  <text class="td" x="424" y="102" >0/90/180/270&#176; task, 15 ep</text>
+  <path class="dash" d="M350 114 V188"/>
+  <text class="dl" x="342" y="160" style="text-anchor:end">init weights</text>
+  <g class="cube">
+  <polygon fill="#f8c978" points="640,58 650,48 750,48 740,58"/>
+  <polygon fill="#cf8420" points="740,58 750,48 750,104 740,114"/>
+  <rect fill="#f4a93a" x="640" y="58" width="100" height="56"/>
+  <text class="in" x="690.0" y="82.8" style="font-size:16px;fill:#3d2600">CleanLab</text>
+  <text class="in" x="690.0" y="99.5" style="font-size:14px;fill:#3d2600">5-fold OOF</text>
+  </g>
+  <text class="tn" x="764" y="82" >Label cleaning</text>
+  <text class="td" x="764" y="102" >988 noisy labels &#8594; 0.3&#215; weight</text>
+  <path class="dash" d="M690 114 V188"/>
+  <text class="dl" x="682" y="160" style="text-anchor:end">sample weights</text>
+  <g class="cube">
+  <polygon fill="#e1e6ed" points="1085,58 1095,48 1195,48 1185,58"/>
+  <polygon fill="#97a3b4" points="1185,58 1195,48 1195,104 1185,114"/>
+  <rect fill="#c3ccd8" x="1085" y="58" width="100" height="56"/>
+  <text class="in" x="1135.0" y="82.8" style="font-size:16px;fill:#222">Validation</text>
+  <text class="in" x="1135.0" y="99.5" style="font-size:14px;fill:#222">867 imgs</text>
+  </g>
+  <path class="dash" d="M1140 114 V160 H1112 V287"/>
+  <path class="dash" d="M1140 160 H1224 V287"/>
+  <text class="dl" x="1104" y="182" style="text-anchor:end">&#954; weights</text>
+  <text class="dl" x="1232" y="182" style="text-anchor:start">bias b</text>
+  <rect x="40" y="545" width="18" height="18" rx="3" fill="#c3ccd8"/>
+  <text class="lg" x="66" y="560" >Data / validation</text>
+  <rect x="245" y="545" width="18" height="18" rx="3" fill="#4fd6b6"/>
+  <text class="lg" x="271" y="560" >Self-supervised</text>
+  <rect x="430" y="545" width="18" height="18" rx="3" fill="#f4a93a"/>
+  <text class="lg" x="456" y="560" >CleanLab</text>
+  <rect x="580" y="545" width="18" height="18" rx="3" fill="#5b8fd9"/>
+  <text class="lg" x="606" y="560" >ResNet backbone</text>
+  <rect x="790" y="545" width="18" height="18" rx="3" fill="#9b3df0"/>
+  <text class="lg" x="816" y="560" >Ensemble</text>
+  <rect x="935" y="545" width="18" height="18" rx="3" fill="#d1344f"/>
+  <text class="lg" x="961" y="560" >Decode</text>
+  <rect class="op" x="1060" y="544" width="26" height="20" rx="4"/>
+  <text class="lg" x="1094" y="560" >Conv / head</text>
+  <path d="M1230 555 H1270" stroke="#777" stroke-width="2" stroke-dasharray="8 6"/>
+  <text class="lg" x="1280" y="560" >training-time</text>
+</svg>
+</body>
+</html>
