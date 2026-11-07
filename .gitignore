@@ -5,3 +5,4 @@ predictions/
 *.pt
 *.onnx
 ~$*
+*.part*

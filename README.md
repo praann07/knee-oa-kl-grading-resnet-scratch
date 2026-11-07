@@ -170,8 +170,8 @@ git clone https://github.com/praann07/knee-oa-kl-grading-resnet-scratch.git
 cd knee-oa-kl-grading-resnet-scratch
 pip install -r requirements.txt
 
-# download the weights bundle from the latest release (85 MB)
-curl -L -o knee_oa_model.pt https://github.com/praann07/knee-oa-kl-grading-resnet-scratch/releases/latest/download/knee_oa_model.pt
+# download the weights bundle (85 MB, stored as 10 small parts in the v1.0.0 release) and verify it
+python download_weights.py
 
 python predict.py assets/sample_xrays/G3_01.png            # any knee X-ray (png/jpg)
 ```
@@ -197,6 +197,7 @@ The three-architecture comparison is [`notebooks/02_three_architectures_12_model
 ```
 ├── README.md
 ├── predict.py                      # inference + Grad-CAM, 4-model ensemble
+├── download_weights.py             # fetches + joins the weights from the release
 ├── requirements.txt
 ├── notebooks/
 │   ├── 01_resnet_only_final_run.ipynb          # the final model (4 × ResNet)
